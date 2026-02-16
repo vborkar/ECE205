@@ -3,42 +3,50 @@
 
 using namespace std;
 
-double balance = 1000.00;
-double interest_rate = 0.015; // 1.5% monthly
-double monthly_payment = 50.00;
+
+double calculateHatSize(double weight, double height) {
+    return (2.9 *weight) / height;
+}
+
+double calculateJacketSize(double height, double weight, int age) {
+    double baseSize = (height *weight) / 288.0;
+    double adjustment = 0.0;
     
-double interest, principal, payment;
-double total_interest = 0.0;
-double total_paid = 0.0;
-int month = 0;
+    if (age > 30) {
+        int fullDecades = (age - 30) / 10;
+        adjustment = fullDecades *0.125; 
+    }
+    
+    return baseSize + adjustment;
+}
+
+double calculateWaistSize(double weight, int age) {
+    double baseSize = weight / 5.7;
+    double adjustment = 0.0;
+    
+    if (age > 28) {
+        int fullIntervals = (age - 28) / 2;
+        adjustment = fullIntervals *0.1; 
+    }
+    
+    return baseSize + adjustment;
+}
 
 int main() {
-   cout << right << setw(8)  << "Month #" << right << setw(12) << "Interest" << right << setw(12) << "Principal" << right << setw(12) << "Balance" << right << setw(18) << "Total Interest" << right << setw(12) << "Total Paid" << endl;
-    cout << fixed << setprecision(2);
+    double height, weight;
+    int age;
 
-    // Loop until the balance is paid off
-    while (balance > 0) {
-        month++;
-        
-        interest = balance * interest_rate;
-        
-        // Logic for the final payment
-        if (balance + interest < monthly_payment) {
-            payment = balance + interest;
-            principal = balance;
-            balance = 0;
-        } else {
-            payment = monthly_payment;
-            principal = payment - interest;
-            balance = balance - principal;
-        }
+    cout << "Enter your height (in inches), weight (in pounds), and age: ";
+    cin >> height >> weight >> age;
 
-        total_interest += interest;
-        total_paid += payment;
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
 
-        // Data Row - Symbols ($) are placed manually to keep decimals aligned
-        cout << right << setw(4) << month << setw(10) << "$" << interest << setw(6) << "$" << principal << setw(8) << "$" << balance << setw(10) << "$" << total_interest << setw(8) << "$" << total_paid << endl;
-    }
+    cout << "\n--- Your Calculated Clothing Sizes ---" << endl;
+    cout << "Hat Size:    " << calculateHatSize(weight, height) << endl;
+    cout << "Jacket Size: " << calculateJacketSize(height, weight, age) << " inches" << endl;
+    cout << "Waist Size:  " << calculateWaistSize(weight, age) << " inches" << endl;
 
     return 0;
 }

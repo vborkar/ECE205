@@ -1,70 +1,59 @@
 #include <iostream>
-#include <string>
-#include <iomanip>
+#include <fstream>
+#include <cmath> 
 
 using namespace std;
 
-float rate = 36.75; // rate per hour, up to 40 hours
-int hours_worked;
-float overtime = 1.5; // overtime multiplier
-float gross_pay; //from hours worked including overtime
-float total_pay; //total pay after deductions
-int num_dependents;
-float deductions_dep;
+double calculateAverage(int n1, int n2, int n3, int n4, int n5) {
+    return (n1 + n2 + n3 + n4 + n5) / 5.0;
+}
 
-//** Taxes: 6% Social Security, 15% Federal, 4% State, 1% Local, $20 dues
-// 2 or more dependents - $40 deduction
+double calculateStdDev(int n1, int n2, int n3, int n4, int n5, double avg) {
 
-//read num hours worked in a week, number dependents -- provide total pay
+    double sumOfSquares = pow(n1 - avg, 2) + pow(n2 - avg, 2) + 
+                          pow(n3 - avg, 2) + pow(n4 - avg, 2) + 
+                          pow(n5 - avg, 2);
+    return sqrt(sumOfSquares / 5.0);
+}
 
 int main() {
+    ifstream in; 
+    ofstream out; 
+    int n1, n2, n3, n4, n5;
 
-    cout << "Enter number of hours worked in a week: " << endl;
-    cin >> hours_worked;
-    cout << endl;
 
-    cout << "Enter number of dependents: " << endl;
-    cin >> num_dependents;
-    cout << endl;
-
-    //find gross pay
-    if (hours_worked <= 40) 
-        gross_pay = hours_worked * rate;
-    else 
-        gross_pay = (40 * rate) + ((hours_worked - 40) * rate * overtime);
-
-    cout << fixed << setprecision(2); 
-    cout << "Your gross pay is: $" << gross_pay << endl;
-
-    //tax deductions (PRINT THESE)
-    float social = gross_pay * 0.06;
-    float federal = gross_pay * 0.15;
-    float state = gross_pay * 0.04;
-    float local = gross_pay * 0.01;
-    float dues = 20.0;
-
-    cout << "Social Security tax: $" << social << endl;
-    cout << "Federal tax: $" << federal << endl;
-    cout << "State tax: $" << state << endl;
-    cout << "Local tax: $" << local << endl;
-    cout << "Union dues: $" << dues << endl;
-
-    float deductions_tax = social + federal + state + local + dues;
-
-    //deduction if they have depenendents
-    if (num_dependents >= 2) {
-        deductions_dep = 40.0;
-    } else {
-        deductions_dep = 0.0;
+    in.open("scores.txt");
+    if (!in) {
+        cout << "Error: Could not open scores.txt" << endl;
+        return 1;
     }
     
-    cout << "Dependent deduction: $" << deductions_dep << endl;
-    //final pay
-    float tot_deduct = deductions_tax + deductions_dep;
-    total_pay = gross_pay - tot_deduct;
+    in >> n1; 
+    in >> n2; 
+    in >> n3;
+    in >> n4;
+    in >> n5; 
 
-    cout << "Total deductions from pay: $" << tot_deduct << endl;
-    cout << "Your total pay after deductions is: $" << total_pay << endl;
+    double avg = calculateAverage(n1, n2, n3, n4, n5); 
+    double std_dev = calculateStdDev(n1, n2, n3, n4, n5, avg);
 
+    out.open("output.txt");
+    
+    out.setf(ios::fixed);
+    out.setf(ios::showpoint);
+    out.precision(2);
+    
+    out << "Average: " << avg << endl; 
+    out << "Standard Deviation: " << std_dev << endl;
+
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout << "The average score is: " << avg << endl;
+    cout << "The standard deviation is: " << std_dev << endl;
+
+    in.close();
+    out.close();
+    
     return 0;
 }

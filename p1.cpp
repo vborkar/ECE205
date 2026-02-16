@@ -1,35 +1,38 @@
 #include <iostream>
-#include <string>
+#include <cmath> 
 #include <iomanip>
 
 using namespace std;
 
-int input_time; 
-int hours;
-int minutes;
-int seconds;
+double m1; 
+double m2; 
+double d; 
+double force; 
+const double G = 6.673e-8;
+bool continueCalculation = true;
 
-float real_hour;
-float real_minute;
+// Function to calculate force 
+double calculateForce(double m1, double m2, double d) {
+    const double G = 6.673e-8; 
+    return (G * m1 * m2) / pow(d, 2); 
+}
 
 int main() {
-    cout << "Enter time in seconds: " << endl;
-    cin >> input_time;
-    cout << endl;
+    char choice;
+    do {
+        double mass1, mass2, distance;
+        cout << "Enter mass 1 (g), mass 2 (g), and distance (cm): ";
+        cin >> mass1 >> mass2 >> distance;
 
-    hours = input_time / 3600;
-    minutes = (input_time % 3600) / 60;
-    seconds = input_time % 60;
+        cout.setf(ios::scientific);
+        cout.setf(ios::showpoint);
+        cout.precision(2);
 
-    real_hour = float(hours) + float(minutes / 60.0) + float(seconds / 3600.0);
-    real_minute = float(hours * 60) + float(minutes) + float(seconds / 60.0);
+        force = calculateForce(mass1, mass2, distance);
 
-    cout << "Time is " << hours << " hours, " << minutes << " minutes, and " << seconds << " seconds." << endl;
+        cout << "The gravitational attractive force is: " << force << " dynes" << endl;
 
-    cout << fixed << setprecision(4); 
-
-    cout << "Real time in hours is: " << real_hour << " hours." << endl;
-    cout << "Real time in minutes is: " << real_minute << " minutes." << endl;
+    } while (continueCalculation);
 
     return 0;
 }
